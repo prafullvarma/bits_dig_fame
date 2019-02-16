@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* label color */
+
+    body {
+      background: url('background.jpeg');
+    }
+
+    .main {
+      margin-top: 10px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper red darken-3">
+      <a href="#" class="brand-logo">Blood Share<i class="material-icons red darken-3 right">favorite</i></a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <!-- <li><a href="/login">Login</a></li> -->
+        <li><a class="modal-trigger" data-target="modal2">Register</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="main">
+    <!-- Events cards -->
+    <div class="row m6">
+      <div class="col s12 m6">
+        <% eventsCreated.forEach(function(event) { %>
+          <div class="card red darken-1 ">
+            <div class="card-content white-text">
+              <span class="card-title"><%= event.name %></span>
+              <p>
+                <%= event.date %>
+              </p>
+              <p>
+                <%= event.location %>
+              </p>
+            </div>
+            <div class="card-action">
+              <a href="#">This is a link</a>
+              <a href="#">This is a link</a>
+            </div>
+          </div>
+          <% }); %>
+      </div>
+
+      <!-- Login Modal Trigger -->
+      <div class="container valign-wrapper">
+        <div class="col s12 m6">
+          <div class="center-align">
+            <button data-target="modal1" class="btn btn-large red modal-trigger">Login</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login Modal -->
+      <div id="modal1" class="modal">
+        <div class="modal-content center-align">
+          <h4>Login</h4>
+          <p>Input Email and Password</p>
+          <form action="/login" method="POST">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input type="email" name="email" id="name">
+              <label for="email">Email</label>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input type="password" id="password" name="password">
+              <label for="password">Password</label>
+            </div>
+            <div class="input-field col s12 center-align">
+              <i class="material-icons prefix">account_circle</i>
+              <input type="submit" class="btn waves-effect modal-close red white-text" value="Login" name="loginButton">
+            </div>
+          </form>
+          <p>Not registered ? <a class="modal-close modal-trigger" data-target="modal2">Register</a></p>
+        </div>
+      </div>
+
+      <div id="modal2" class="modal">
+        <div class="modal-content center-align">
+          <h4>Register</h4>
+          <form action="/register" method="POST">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="city" type="text" name="city" class="validate">
+              <label for="city">City</label>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="state" type="text" name="state" class="validate">
+              <label for="state">State</label>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="pin" name="pin" type="number" class="validate">
+              <label for="pin">Pin Code</label>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="email" name="email" type="email" class="validate">
+              <label for="email">Email</label>
+            </div>
+            <div class="input-field col s12 center-align">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="submit" type="submit" name="submit" class="btn waves-effect modal-close red white-text" value="Next">
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.modal');
+      var instances = M.Modal.init(elems, {});
+    });
+  </script>
+</body>
+
+</html>
