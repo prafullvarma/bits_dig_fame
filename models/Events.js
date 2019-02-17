@@ -15,14 +15,16 @@ const EventSchema = new mongoose.Schema({
   },
 
   organisedBy: {
-    centerID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "events"
+    eLoc: {
+      type: String
     },
     lat: {
       type: String
     },
     lng: {
+      type: String
+    },
+    centerName: {
       type: String
     }
   },

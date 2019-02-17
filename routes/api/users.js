@@ -119,41 +119,58 @@ router.post("/register", (req, res) => {
     .catch(err => res.send(err));
 });
 
+router.get("/:id", (req, res) => {
+  User.findById(req.params.id)
+    .then(user => {
+      if (!user.number)
+        return res.status(404).send({ error: "No user with this id found" });
+      res.send(user);
+    })
+    .catch(err => res.status(404).send(err));
+});
+
 router.post("/all", (req, res) => {
   var lat = req.body.lat;
   var lng = req.body.lng;
-
+  console.log(lat, lng);
   const usersFound = [];
 
-  //  const token = "d70b9760-251f-41d4-9f4a-ae27e4ba9e18"; // This needs to be generated regularly.
-
-  User.find({}).then(results => {
-    results = results.filter(
-      result =>
-        getDistanceFromLatLonInKm(
-          lat,
-          lng,
-          result.location.lat,
-          result.location.lng
-        ) < 10
-    );
-    results.forEach(result => {
-      usersFound.push({
-        lat: result.location.lat,
-        lng: result.location.lng,
-        name: result.name,
-        number: result.number,
-        bloodGroup: result.bloodGroup,
-        distance: getDistanceFromLatLonInKm(
-          lat,
-          lng,
-          result.location.lat,
-          result.location.lng
-        ).toFixed(3)
+  User.find({})
+    .then(results => {
+      results = results.filter(
+        result =>
+          getDistanceFromLatLonInKm(
+            lat,
+            lng,
+            result.location.lat,
+            result.location.lng
+          ) < 10000
+      );
+      results.forEach(result => {
+        usersFound.push({
+          lat: result.location.lat,
+          lng: result.location.lng,
+          name: result.name,
+          number: result.number,
+          bloodGroup: result.bloodGroup,
+          userId: result._id,
+          distance: getDistanceFromLatLonInKm(
+            lat,
+            lng,
+            result.location.lat,
+            result.location.lng
+          ).toFixed(3)
+        });
       });
-    });
-    res.json(usersFound);
-  });
+      // console.log(usersFound);
+      // usersFound = usersFound.sort({ distance: -1 });
+      // console.log(usersFound);
+
+      usersFound.sort((a, b) => a.distance < b.distance);
+
+      res.json(usersFound);
+    })
+    .catch(err => res.status(400).send(err));
 });
 
 module.exports = router;

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
+const JsonCircular = require("json-circular");
 
 require("../../config/passport")(passport);
 
@@ -45,6 +46,7 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
+  console.log(req.body);
   Center.findOne({ email: req.body.email })
     .then(center => {
       if (!center) {
@@ -58,7 +60,8 @@ router.post("/login", (req, res) => {
             return res.status(400).json(errors);
           } else {
             // User matched
-            res.send(center.eLoc);
+            console.log(center.eLoc);
+            res.json(center.eLoc);
           }
         })
         .catch(err => {
@@ -84,7 +87,7 @@ router.post("/updateInventory", (req, res) => {
 router.get("/bloodBank/:eLoc", (req, res) => {
   const eLoc = req.params.eLoc;
 
-  Center.find({ eLoc: eLoc })
+  Center.findOne({ eLoc: eLoc })
     .then(center => {
       if (!center) {
         return res.send({ error: "This center is not registered. :(" });
@@ -331,21 +334,17 @@ router.get("/findDist/:l11/:l12/:l21/:l22", (req, res) => {
 
   axios({
     method: "GET",
-    url: `https://apis.mapmyindia.com/advancedmaps/v1/pdjc76p9aie9f6p21ppivfu6qhha8t19/route?start=${lat1},${lng1}&destination=${lat2},${lng2}&with_advices=1`,
-    headers: {
-      Authorization: `bearer ${token}`
-    }
+    url: `https://apis.mapmyindia.com/advancedmaps/v1/pdjc76p98ie9f6t21ppivfu6qhha8t19/route?start=${lat1},${lng1}&destination=${lat2},${lng2}&with_advices=1`
   })
     .then(res1 => {
-      res.send(res1.data);
+      console.log(res1);
+      const ans = [];
 
-      // const ans = [];
-      //
-      // res1.results.trips[0].advices.map(trip => {
-      //   ans.push([trip.pt.lat, trip.pt.lng]);
-      // });
-      //
-      // console.log(ans);
+      res1.data.results.trips[0].advices.map(trip => {
+        ans.push([trip.pt.lat, trip.pt.lng]);
+      });
+
+      res.send(ans);
     })
     .catch(err => res.status(400).send(err));
 });
@@ -374,11 +373,11 @@ router.get("/inventory/:eLoc", (req, res) => {
 
 //POPST all Hospitals
 router.post("/all/hospital", (req, res) => {
-  const lat = req.body.lat;
-  const lng = req.body.lng;
+  var lat = req.body.lat;
+  var lng = req.body.lng;
   const centersFound = [];
 
-  const token = "3cb3cf26-8c90-4a51-bfd1-38d641d57094"; // This needs to be generated regularly.
+  const token = "b46a3249-92f5-4fe3-901a-3c21e5881690"; // This needs to be generated regularly.
 
   axios({
     method: "GET",

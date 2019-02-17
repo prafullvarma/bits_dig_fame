@@ -1,16 +1,7 @@
 const mongoose = require("mongoose");
 
 const CenterSchema = new mongoose.Schema({
-  city: {
-    type: String
-  },
   eLoc: {
-    type: String
-  },
-  state: {
-    type: String
-  },
-  pinCode: {
     type: String
   },
 
